@@ -12,10 +12,9 @@ import { HousingLocation } from '../housing-location';
         <button class="primary" type="button">Search</button>
       </form>
       <section class="results">
-        <app-housing-location
-          *ngFor="let housingLocation of housingLocationList"
-          [housingLocation]="housingLocation"
-        ></app-housing-location>
+        @for (housingLocation of housingLocationList; track housingLocation) {
+          <app-housing-location [housingLocation]="housingLocation"></app-housing-location>
+        }
       </section>
     </section>
   `,
@@ -78,7 +77,7 @@ export class Home {
       name: 'Hopeful Apartment Group',
       city: 'Oakland',
       state: 'CA',
-      photo: '/assets/r-architecture-JvQ0Q5IkeMM-unsplash.jpg',
+      photo: 'assets/r-architecture-GGupkreKwxA-unsplash.jpg',
       availableUnits: 2,
       wifi: true,
       laundry: true,

@@ -7,7 +7,7 @@ import { HousingLocation } from '../housing-location';
   template: `
     <section class="listing">
       <img
-        class="listing-phot"
+        class="listing-photo"
         [src]="housingLocation.photo"
         alt="Exterior Photo of {{ housingLocation.name }}"
       />
