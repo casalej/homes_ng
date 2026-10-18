@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HousingService } from '../housing-service';
 import { HousingLocation } from '../housing-location';
@@ -23,6 +23,7 @@ import { first } from 'rxjs';
           <li>Does this location have laundry: {{ housingLocation?.laundry }}</li>
         </ul>
       </section>
+      <!-- <div hidden="true">{{ this.housingLocation }}</div> -->
       <section class="listing-apply">
         <h2 class="section-heading">Apply to live here</h2>
         <form [formGroup]="applyForm" (submit)="submitApplication()">
@@ -49,9 +50,14 @@ export class Details {
     email: new FormControl(''),
   });
 
-  constructor() {
+  constructor(private cdf: ChangeDetectorRef) {
     const housingLocationId = Number(this.route.snapshot.params['id']);
-    this.housingLocation = this.housingService.getHousingLocationById(housingLocationId);
+    this.housingService
+      .getHousingLocationById(housingLocationId)
+      .then((housingLocation: HousingLocation | undefined) => {
+        this.housingLocation = housingLocation;
+        this.cdf.detectChanges();
+      });
   }
 
   submitApplication() {

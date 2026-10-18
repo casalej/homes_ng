@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { HousingLocationComponent } from '../housing-location/housing-location';
 import { HousingLocation } from '../housing-location';
 import { HousingService } from '../housing-service';
@@ -9,11 +9,11 @@ import { HousingService } from '../housing-service';
   template: `
     <section>
       <form>
-        <input type="text" placeholder="Filter by city" />
-        <button class="primary" type="button">Search</button>
+        <input type="text" placeholder="Filter by city" #filter />
+        <button class="primary" type="button" (click)="filterResults(filter.value)">Search</button>
       </form>
       <section class="results">
-        @for (housingLocation of housingLocationList; track housingLocation) {
+        @for (housingLocation of filterdLocationList; track housingLocation.id) {
           <app-housing-location [housingLocation]="housingLocation"></app-housing-location>
         }
       </section>
@@ -24,8 +24,21 @@ import { HousingService } from '../housing-service';
 export class Home {
   housingLocationList: Array<HousingLocation> = [];
   housingService: HousingService = inject(HousingService);
+  filterdLocationList: Array<HousingLocation> = [];
 
-  constructor() {
-    this.housingLocationList = this.housingService.getAllHousingLocations();
+  constructor(private cdf: ChangeDetectorRef) {
+    this.housingService.getAllHousingLocations().then((housingLocationList: HousingLocation[]) => {
+      this.housingLocationList = housingLocationList;
+      this.filterdLocationList = housingLocationList;
+      this.cdf.detectChanges();
+    });
+  }
+
+  filterResults(text: string) {
+    if (!text) this.filterdLocationList == this.housingLocationList;
+
+    this.filterdLocationList = this.housingLocationList.filter((h) => {
+      return h.city.toLocaleLowerCase().includes(text.toLocaleLowerCase());
+    });
   }
 }
