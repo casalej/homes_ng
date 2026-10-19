@@ -8,5 +8,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('minecraft_quiz');
+  protected readonly title = signal('homesnp');
 }
